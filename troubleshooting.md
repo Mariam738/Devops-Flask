@@ -110,3 +110,32 @@ Do not fabricate a failed attempt just to fill the template. Record actual attem
 - **Remaining uncertainty:**
     - None for backend storage
     - Pending NGINX routing configuration
+
+## Entry 3
+- **Symptom:**
+    1) Accessing `http://localhost:8080/instance` in the browser resulted in "This page isn’t working" (localhost didn’t send any data.)
+    2) NGINX container lacked health monitoring in Docker.
+- **Hypothesis:**
+    1) Port mismatch between the Docker host mapping and NGINX's internal listen configuration
+    2) Missing NGINX container health check 
+- **Command or test:**
+    1) Browser check: Attempted to load `http://localhost:8080/instance`.
+    2) Infrastructure check:
+       ```bash
+       docker compose ps
+       ```
+- **Actual output:**
+    1) Browser connection error (`This page isn’t working`)
+    2) Nginx container status showing `Up` without a health check indicator 
+- **Failed attempt and what changed your thinking:** None
+- **Root cause:**
+    1) `docker-compose.yml` mapped host traffic to container port `81`, while `nginx.conf` was configured to listen internally on port `80`
+    2) The NGINX service definition lacked a native Docker health check to verify proper startup
+- **Fix:**
+    1) Corrected the Docker port mapping in `docker-compose.yml` to target port `80` (`ports: ["127.0.0.1:${PUBLIC_PORT:-8080}:80"]`)
+    2) Added an explicit Docker health check block (`test: ["CMD", "nginx", "-t"]`) to the NGINX service.
+- **Retest evidence:**
+    - This page isn't working error cleared, and traffic successfully reached NGINX, resulting in a **502 Bad Gateway** response (paving the way for Entry 4's upstream investigation).
+    - `docker compose ps` successfully reported NGINX as **Up (healthy)**.
+- **Related commit:** Fix: NGINX port mapping and add container health check
+- **Remaining uncertainty:** NGINX is now reachable, but upstream communication with the backend application containers needs resolution
