@@ -139,3 +139,34 @@ Do not fabricate a failed attempt just to fill the template. Record actual attem
     - `docker compose ps` successfully reported NGINX as **Up (healthy)**.
 - **Related commit:** Fix: NGINX port mapping and add container health check
 - **Remaining uncertainty:** NGINX is now reachable, but upstream communication with the backend application containers needs resolution
+
+## Entry 4
+- **Symptom:**
+    1) **Initial:** NGINX `502 Bad Gateway` (`connect() failed (111: Connection refused)`)
+    2) **Subsequent (revealed after clearing the 502):** Traffic routed exclusively to `app-02` because `app-01` had an incorrect port in the upstream pool
+- **Hypothesis:**
+    1) Loopback binding blocked cross-container traffic
+    2) `app-01` had an incorrect port configured in the upstream pool
+- **Command or test:**
+    ```bash
+    for i in {1..6}; do curl -s http://localhost:8080/instance; echo ""; done
+    ```
+- **Actual output:** 
+    1) Initial execution returned HTTP `502 Bad Gateway`
+    2) After resolving the 502 error, responses returned exclusively from `app-02` 
+- **Failed attempt and what changed your thinking:** None
+- **Root cause:**
+    1) Apps bound to `127.0.0.1` (loopback), blocking cross-container traffic from NGINX.
+    2) `app-01` had an incorrect port defined in the NGINX upstream pool
+- **Fix:** 
+    1) Set `APP_HOST: "0.0.0.0"` in `docker-compose.yaml`
+    2) Updated `app-01` with its correct port in the NGINX upstream pool (`nginx.conf`):
+       ```nginx
+       upstream application_pool {
+           server app-01:8080 max_fails=0;
+           server app-02:8080 max_fails=0;
+       }
+       ```
+- **Retest evidence:** The `for` loop successfully alternates responses between `app-01` and `app-02`
+- **Related commit:** Fix: Resolve NGINX 502 error and configure backend load balancing
+- **Remaining uncertainty:** None
