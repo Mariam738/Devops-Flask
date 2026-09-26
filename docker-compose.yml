@@ -15,7 +15,7 @@ x-app: &app
     interval: 5s      # How often to run the check
     timeout: 3s       # Maximum time to wait for a response
     retries: 3        # Failures required to mark the container unhealthy
-    start_period: 40s  # Grace period for app startup (adjust if your app needs more boot time)
+    start_period: 10s  # Grace period for app startup (adjust if your app needs more boot time)
   deploy:
     resources:
       limits:
@@ -46,7 +46,7 @@ services:
       interval: 3s
       timeout: 3s
       retries: 10
-      start_period: 15s
+      start_period: 10s
     deploy:
       resources:
         limits:
