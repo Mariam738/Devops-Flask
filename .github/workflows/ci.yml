@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+build-and-test:
+  runs-on: ubuntu-latest
+
+  steps:
+    # 1. Checkout repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Syntax & Compose validation
+    - name: Validate Docker Compose configuration
+      run: docker compose config
+
+    # 3. Build containers
+    - name: Build Docker images
+      run: docker compose build
+    
+    # 4 & 5. Start containers and wait for all healthchecks to pass automatically
+    - name: Start containers and wait for readiness
+      run: docker compose up -d --wait
+    
+    # 6. Validate (Run your endpoint and failure/recovery tests)
+    - name: Run Validation Scripts
+      run: |
+        echo "-> Running validate.py..."
+        python validate.py
+
+        echo "-> Running failure_test.py..."
+        python failure_test.py
