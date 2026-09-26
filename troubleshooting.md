@@ -149,7 +149,7 @@ Do not fabricate a failed attempt just to fill the template. Record actual attem
     2) `app-01` had an incorrect port configured in the upstream pool
 - **Command or test:**
     ```bash
-    for i in {1..6}; do curl -s http://localhost:8080/instance; echo ""; done
+    for i in {1..6}; do curl -s -H "Connection: close" http://localhost:8080/instance; echo ""; done
     ```
 - **Actual output:** 
     1) Initial execution returned HTTP `502 Bad Gateway`
