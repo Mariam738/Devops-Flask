@@ -19,6 +19,8 @@ jobs:
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> config/app.env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> config/app.env
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> config/app.env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> config/app.env
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> config/app.env
 
       # 2. Syntax & Compose validation
       - name: Validate Docker Compose configuration
