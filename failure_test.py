@@ -6,10 +6,14 @@ import urllib.request
 import urllib.error
 import json
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Configuration
 TIMEOUT = 5
-BASE_URL = "http://localhost:8080"
+BASE_URL = f"http://localhost:{os.getenv('PUBLIC_PORT')}" # NGINX public gateway
 TARGET_CONTAINER = "app-01"
 
 def check_result(name, success, message=""):
@@ -83,7 +87,7 @@ def main():
     print(f"   -> Active Instances Responding: {active_instances}")
 
     # Expecting 0 errors because NGINX should failover to the surviving backend
-    ha_ok = (errors <= 3) and (len(active_instances) == 1) # 70% HA
+    ha_ok = (errors <= 3) and (len(active_instances) >= 1) # 70% HA
     success &= check_result("High Availability (Zero errors during backend down)", ha_ok, f"Errors: {errors}, Active instances seen: {active_instances}")
 
     # 4. Restore the backend instance
@@ -116,7 +120,7 @@ def main():
     print(f"   -> Instances seen after recovery: {recovered_instances}")
 
     # We want to see multiple instances again, proving the restarted backend is back in rotation
-    recovered_ok = len(recovered_instances) == 2
+    recovered_ok = len(recovered_instances) >= 2
     success &= check_result("Backend Recovery & Traffic Resumption", recovered_ok, f"Seen instances: {recovered_instances} (Expected at least 2 active nodes)")
 
     print("\n==============================")

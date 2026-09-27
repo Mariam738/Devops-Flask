@@ -6,10 +6,14 @@ import urllib.request
 import urllib.error
 import json
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Configuration
 TIMEOUT = 5
-BASE_URL = "http://localhost:8080" # NGINX public gateway
+BASE_URL = f"http://localhost:{os.getenv('PUBLIC_PORT')}" # NGINX public gateway
 
 def check_result(name, success, message=""):
     if success:
