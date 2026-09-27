@@ -53,13 +53,24 @@ curl http://127.0.0.1:8080/records # find Backup Restore Proof
     ```Bash
     docker compose down -v --rmi all
     ```
-
-## Architecure
-<!-- <img src="architectrure.svg" alt="Architecture"> -->
-
-[![](https://mermaid.ink/img/pako:eNqdVGtvmzAU_SuWpVaJFBIwjwKaKnWN1E3aI0unfRjkg0M8ggo2MqZLl-a_75pHk0ZZW80fAPuee8651zZbnIgVwyFOJS3X6Ps0ljFHMM7O0HWeMa7QOZpJsXnoA-1q1AUn6CNXTHKmFsgwLh9nQirkm74Z-uYj-pJmfBM1TzRn90xWrCV7t5STy19SQC5fIcj-LeTdopc48PCB0VytddKSVUhwdJXn6BryaMaBrkdOKSsEHwymIrljsps2Il9lsmaVklQJORwiYwwmD0k7k8-JTsGuytJ6E4q8jprdvI6Zs1VWnegIKORZQlUGaXNRq4ynfbRttN4GHWBoQsFz6zyCBzKt530_R0sK_drvQLV4iYq05bVU5M1UB97fdxjYQM4SXcJThdpko9eeJ5qj5ii5jk10v6LBTFQqlez226dG-UhuuDggIi8QHbv6h65nXwTdHkSD5vVfqgc0J9pxC2eSpqxfqeplewu7dfRD5HXBnjL1mN2AiqEjVjQo25ZUxooquveiRyPZQ0k0kHp-hINC8AgufrbCoZI1G-GCyYLqKd5qSIzVmhUsxiF8AkO9MRKRCxnjmO8gtaT8pxBFny1Fna77SV2CGJtmFEraI0CSyWtRc4VD1_UaChxu8QaHlmePHdc3bcu-IDYhnjPCDzg0zLFJHMsKSGBZJPA937G93Qj_aYTNcUBs07EdiLiWa1vBCEOl0L_P7W-t-bvt_gIvO4-u?type=png)](https://mermaid.live/edit#pako:eNqdVF1vmzAU_SuWpVZECgkYSAFNlbpG6ibtI0unPQzy4BCXoIKNjNnSpfnvu-ajSaOsreYHwL7nnnPutc0WJ2LFcIhTScs1-j6NZcwRjLMzdJ1njCt0jmZSbB76QLsadcEx-sgVk5ypBTLNy8eZkAr5lm-FvvWIvqQZ30TNE83ZLyYr1pK9W8rx5Z0UkMtXCLJ_C3m_6CUOPHxgNFdrnbRkFRIcXeU5uoY8mnGg65FTygrBDWMqknsmu2kj8lUma1YpSZWQgwEyR2DykLQz-ZzoFOyqLO03ocjrqNnN65g5W2XViY6AQp4lVGWQNhe1ynjaR9tG623QAYbGFDy3ziN4IMt-3vdztKTQr_0OVIuXqEhbXktF3kx14P19h4EN5CzRJTxVqE02eu15ojlqjpLnOkT3KzJmolKpZLffPjXKR3KDxQEReYHo2NU_dCfORdDtQWQ0r_9SPaA50Y5bOJM0Zf1KVS_bW9itox8irwv2lKnH7AZUTB2xI6NsW1KZK6ro3osejWQPJZEh9fwIB4XgIVz8bIVDJWs2xAWTBdVTvNWQGKs1K1iMQ_gEhnpjJiIXMsYx30FqSflPIYo-W4o6XfeTugQxNs0olLRHgCST16LmCoee5zUUONziDQ7tiTNyPd9ybOeCOIRM3CF-wKFpjSzi2nZAAtsmgT_xXWeyG-I_jbA1CohjuY4LEc_2HDsYYqgU-ve5_a0lgt9lKd79BVAXkIg)
-
 ---
+## ❓Questions
+- What failed first? What proved the cause? Which failed attempt taught you something? ➡️ answered in troubleshooting.md
+- What patterns did the logs reveal? How did you avoid double-counting requests? ➡️ answered in log_analysis.md (summary of incidents section and Q2)
+- How do requests flow? Why these ports, networks and readiness checks? ➡️ answered in architecture.md
+- Why these timeouts, retries, restart settings and resource limits?
+  - Timeouts prevent deadlocks
+  - Retries handle transient network/boot glitches.
+  -Restart settings provide automated recovery (self-healing).
+  - Resource limits ➡️ answered in decision.md (Decision 5)
+- When should validation fail? What does green CI prove, or not prove?
+  - validation fail when ➡️ tests fail, code formatting rules are violated, build or compilcation erros, vulnerabilities detected if security scans were used
+  - green CI proves ➡️ Code builds successfully and passes all automated tests, syntax, and known-vulnerability checks passed
+  - green CI does not prove ➡️ Application is bug-free, Application will perform well under production load
+- Which single points of failure remain? How would you fix them in production? ➡️ answered in architecture.md
+- What would you improve? ➡️ Image scanning, Centralized Logging & Monitoring (ELK + Prometheus/Grafana), Automated Database Backups, Deploy a redundant Nginx setup behind a cloud load balancer
+- How did you verify AI-assisted work? ➡️ Reading, validating, testing, debugging, ensured generated codes matched my needs
+
 # DevOps Internship Task - Starter v2
 
 **Due date:** ____________________

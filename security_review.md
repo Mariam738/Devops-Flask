@@ -26,7 +26,7 @@ logging/monitoring and availability. Separate completed work from planned improv
 - **Risk and evidence:** Nginx having access to backend service
 - **Impact:** 
 - **Implemented fix / commit:**
-  - Ensured nginx have acess to frontend network only and 
+  - Ensured nginx have access to frontend network only and 
   - Ensure only the app container bridging both (frontend, backend networks)
 - **Production follow-up:** Implement explicit firewall rules or Docker network policies to restrict cross-container traffic further
 - **How to verify:** spect networks using docker network inspect
