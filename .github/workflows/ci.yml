@@ -43,3 +43,5 @@ jobs:
 
           echo "-> Running failure_test.py..."
           python failure_test.py
+        env:
+          PUBLIC_PORT: 8090
