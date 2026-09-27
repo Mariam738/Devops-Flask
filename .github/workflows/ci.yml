@@ -37,10 +37,9 @@ jobs:
       # 6. Validate (Run your endpoint and failure/recovery tests)
       - name: Run Validation Scripts
         run: |
+          pip install python-dotenv
           echo "-> Running validate.py..."
           python validate.py
 
           echo "-> Running failure_test.py..."
           python failure_test.py
-
-# Final CI Run Link: https://github.com/Mariam738/Devops-Flask/actions/runs/36262296867
