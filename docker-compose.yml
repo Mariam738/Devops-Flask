@@ -85,12 +85,19 @@ services:
     environment:
       <<: *app-env
       INSTANCE_ID: "app-02"
+  app-03:
+    <<: *app
+    container_name: app-03
+    environment:
+      <<: *app-env
+      INSTANCE_ID: "app-03"
   nginx:
     # Ultra-light Alpine base for reverse proxy performance
     image: nginx:1.28-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236
     restart: "unless-stopped"
     container_name: nginx
     ports: ["127.0.0.1:${PUBLIC_PORT:-8080}:80"]
+    command: /bin/sh -c "envsubst < /etc/nginx/nginx.conf > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
     volumes: ["./nginx/nginx.conf:/etc/nginx/nginx.conf:ro"]
     healthcheck:
       test: ["CMD", "nginx", "-t"] # Validates config syntax and daemon health
